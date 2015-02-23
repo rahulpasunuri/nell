@@ -17,8 +17,8 @@ rels = []
 dom = {}
 rang = {}
 
-matches = ["sport", "team", "play", "trophy"]
-notMatches = ["instrument", "transport"] #instrument played by...
+matches = ["financ", "money", "market", "share", "purchase","bonds", "trade", "trading","invest", "acquiredby", "bank", "transaction", "economic", "investment", "economy", "consumer"]
+notMatches = [] #instrument played by...
 
 printNegated = False
 
@@ -178,3 +178,4 @@ for l in lines:
 	if words[1] == "description" and words[0] in rels:
 		print "//",words[0],":\t", words[2]
 	
+print rels
