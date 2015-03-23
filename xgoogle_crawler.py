@@ -6,13 +6,16 @@ import pprint
 import json
 from xgoogle.search import GoogleSearch, SearchError
 
+
 dbFileName = "extractionPatterns.csv"
 outFileName = "data.txt"
 rels=["ceoof"]
 cat=[]
 
 
-endMarkPattern = "[\.\<\>!;\"=]"
+#endMarkPattern = "[\.\<\>!;\"=]"
+endMarkPattern = "[\.\<\>!=]"
+
 endMarkRegex = re.compile(endMarkPattern)
 
 f = open(dbFileName, "r")
@@ -35,6 +38,14 @@ for l in lines:
         p=p.strip()
         relPatterns.append(p)
 
+#this header information is used to send requests..(avoids 403 forbidden error)
+hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
+   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+   'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+   'Accept-Encoding': 'none',
+   'Accept-Language': 'en-US,en;q=0.8',
+   'Connection': 'keep-alive'}
+
 
 #search google
 for p in relPatterns:
@@ -42,92 +53,41 @@ for p in relPatterns:
     s="%20".join(words)
     s = "%22"+s+"%22"
     
-    #limit the results to 3
+    #limit the results to 5
     count=0
 
     try:
-        gs = GoogleSearch(p) #input the pattern here..
-        gs.results_per_page = 10
+        gs = GoogleSearch(p) #input the pattern here..TODO choose between s or p ??
+        gs.results_per_page = 25
         results = gs.get_results()
 
         if len(results)==0:
-            print "Error"
+            print "No Results found for pattern: ",p
+            continue
         
         for res in results:
-            #print res.title.encode("utf8")
-            #print res.desc.encode("utf8")
-            #print res.url.encode("utf8")
+            try:
+                page=urllib2.urlopen(res.url.encode("utf8"))
+                content = page.read()    	
+                sentences = endMarkRegex.split(content)
+                for s in sentences:				
+                    if p in s:
+                        data.append(s.strip())                        
+				        
+                if count>5:
+                    break            
+                count = count+1            
+            except:
+                print "Error reading the URL: ", res.url.encode("utf8")
             
-            if count>3:
-                break
             
-            count = count+1
-            
-            print
     except SearchError, e:
         print "Search failed: %s" % e
+        
+    
 	
 outFile = open(outFileName, "w")
 for s in data:
 	outFile.write(s+"\n")	
 outFile.close()	
-print "Total Miss Count is ", totalMiss
-#break#TODO
 
-
-
-
-
-'''
-from xgoogle.search import GoogleSearch
-gs = GoogleSearch("catonmat")
-gs.results_per_page = 10
-results=[]
-#results = gs.get_results()
-
-while len(results)<30:
-
-    tmp = gs.get_results()
-    if not tmp: # no more results were found
-      break
-    results.extend(tmp)
-    
-    
-print 'results', gs.num_results  # number of results
-
-if len(results)==0:
-    print "No Results"
-
-for res in results:
-    print res.url.encode('utf8')
-    print "what??"
-
-'''
-
-
-
-
-
-
-
-
-
-
-
-
-'''
-#!/usr/bin/python
-from xgoogle.search import GoogleSearch, SearchError
-try:
-  gs = GoogleSearch("Batman\\ and\\ I")
-  gs.results_per_page = 50
-  results = gs.get_results()
-  print 'results', gs.num_results  # number of results
-  for res in results:
-    print res.title.encode("utf8")
-    print res.desc.encode("utf8")
-    print res.url.encode("utf8")
-    print
-except SearchError, e:
-  print "Search failed: %s" % e
-'''
