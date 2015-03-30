@@ -6,6 +6,7 @@ import pprint
 import json
 from xgoogle.search import GoogleSearch, SearchError
 
+minSentenceSize = 10 #a sentence must have a minimum characters for it be valid..
 
 dbFileName = "extractionPatterns.csv"
 outFileName = "data.txt"
@@ -13,8 +14,8 @@ rels=["ceoof"]
 cat=[]
 
 
-#endMarkPattern = "[\.\<\>!;\"=]"
-endMarkPattern = "[\.\<\>!=]"
+endMarkPattern = "[\.\<\>!;\"=]"
+#endMarkPattern = "[\.\<\>!=]"
 
 endMarkRegex = re.compile(endMarkPattern)
 
@@ -55,7 +56,8 @@ for p in relPatterns:
     
     #limit the results to 5
     count=0
-
+    results = []
+    
     try:
         gs = GoogleSearch(p) #input the pattern here..TODO choose between s or p ??
         gs.results_per_page = 25
@@ -63,15 +65,25 @@ for p in relPatterns:
 
         if len(results)==0:
             print "No Results found for pattern: ",p
-            continue
-        
-        for res in results:
+            continue            
+    except SearchError, e:
+        print "Search failed: %s" % e
+    
+    for res in results:
             try:
                 page=urllib2.urlopen(res.url.encode("utf8"))
                 content = page.read()    	
                 sentences = endMarkRegex.split(content)
                 for s in sentences:				
                     if p in s:
+                        s=s.strip()
+                        if len(s) < minSentenceSize:
+                            continue
+                        
+                        #a valid sentence must have atleast one space character in it..
+                        if " " not in s:
+                            continue
+                            
                         data.append(s.strip())                        
 				        
                 if count>5:
@@ -79,11 +91,8 @@ for p in relPatterns:
                 count = count+1            
             except:
                 print "Error reading the URL: ", res.url.encode("utf8")
-            
-            
-    except SearchError, e:
-        print "Search failed: %s" % e
-        
+            print "Search Suceeded!!"
+
     
 	
 outFile = open(outFileName, "w")
