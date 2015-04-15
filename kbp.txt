@@ -1,0 +1,51 @@
+//Person Predicates..
+alternate_names 
+date_of_birth=nell::personbirthdate
+age //we have death age in nell..
+country_of_birth=nell::personbornincountry 
+stateorprovince_of_birth= nell::personborninstateorprovince 
+city_of_birth =nell::personbornincity 
+origin 
+date_of_death=nell::persondeathdate
+country_of_death=nell::persondiedincountry 
+stateorprovince_of_death=nell::persondiedinstateorprovince 
+city_of_death=nell::persondiedincity 
+cause_of_death
+countries_of_residence=nell::personhasresidenceincountry 
+statesorprovinces_of_residence=nell::personmovedtostateorprovince  
+cities_of_residence=nell::personhasresidenceincity 
+schools_attended=nell::personattendsschool 
+title
+employee_or_member_of
+religion=nell::personhasreligion
+
+spouse=nell::haswife
+spouse=nell::hashusband
+
+parents=nell::fatherofperson
+parents=nell::motherofperson
+
+siblings=nell::hasbrother 
+siblings=nell::hassister
+
+other_family
+charges
+
+
+//Organization predicates.
+alternate_names
+political_religious_affiliation
+top_members_employees
+number_of_employees_members
+members
+member_of
+subsidiaries
+parents
+founded_by
+date_founded
+date_dissolved
+country_of_headquarters
+stateorprovince_of_headquarters
+city_of_headquarters
+shareholders
+website
