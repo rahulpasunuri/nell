@@ -1,0 +1,55 @@
+
+//************************************************************************************************************************
+//***********************		Data set	******************************************************************
+//************************************************************************************************************************
+
+NELL predictes :  actorstarredinmovie, 
+		agentcollaborateswithagent, 
+		animalistypeofanimal, 
+		athleteledsportsteam, 
+		bankbankincountry, 
+		citylocatedinstate,
+	        bookwriter,
+	        companyasloknownas,
+	        personleadsorganization, 
+		teamplaysagainstteam,
+	        weaponmadeincountry,	
+	        lakeinstate
+//************************************************************************************************************************
+
+Triples : 	100 for each predicates
+
+//************************************************************************************************************************
+Format :	Tab separated file NELL_gold.tsv
+		RDF XML file NELL_gold.rdf
+
+//************************************************************************************************************************
+
+Format Description:	 NELL_gold.tsv
+
+In this file each line is tab separated with the following elements:
+1.	nell subject
+2. 	nell predicate
+3.	nell object
+4.	subject post fixed with a number to make the 
+	occurrence of the entity unique
+5.	object post fixed with a number to make the 
+	occurrence of the entity unique
+6.	gold standard value for subject
+7. 	gold standard value for object
+8.	baseline value for subject
+9.	baseline value for object
+//************************************************************************************************************************
+
+Format Description:	 NELL_gold.rdf
+
+
+<owl:NamedIndividual rdf:about="post fixed entity e">
+        <Predicate:hasGold rdf:resource="analogous gold standard URI of e"/>
+        <Predicate:hasSubj rdf:resource="original nell subject from the triple in which this entity e was occurring"/>
+        <Predicate:hasObj rdf:resource="original nell object from the triple in which this entity e was occurring""/>
+        <Predicate: relationship rdf:resource="post fixed entity with which e is in a relationship"/>
+</owl:NamedIndividual>
+
+
+			
